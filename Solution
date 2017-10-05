@@ -1,0 +1,36 @@
+public string Perform()
+        {
+            for (int i = 0; i < task.Length; i++)
+            {
+                switch (task[i])
+                {
+                    case '[':
+                        numberStack.Push(i);
+                        break;
+                    case ']':
+                        int openingBracePos = numberStack.Pop();
+                        int closingBracepos = i;
+                        string wordInsideBraces = task.Substring(openingBracePos + 1, closingBracepos - openingBracePos - 1);
+                        var hasNumberBeforBraceOpening = int.TryParse(i > 0 ? task[openingBracePos - 1].ToString() : "noNumber", out int repititionCount);
+                        if (hasNumberBeforBraceOpening)
+                        {
+                            for (int j = 0; j < repititionCount; j++)
+                            {
+                                sb.Append(wordInsideBraces);
+                            }
+                            string wordToReplace = task.Substring(openingBracePos - 1, closingBracepos - openingBracePos + 2);
+                            task = task.Replace(wordToReplace, sb.ToString());
+                        }
+                        else
+                        {
+                            sb.Append(wordInsideBraces);
+                            string wordToReplace = task.Substring(openingBracePos, closingBracepos - openingBracePos + 1);
+                            task = task.Replace(wordToReplace, sb.ToString());
+                            i = i - 1;
+                        }
+                        sb.Clear();
+                        break;
+                }
+            }
+            return task;
+        }
